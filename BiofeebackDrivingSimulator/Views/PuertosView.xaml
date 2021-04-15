@@ -1,0 +1,59 @@
+﻿<Window x:Class="BiofeebackDrivingSimulator.Views.PuertosView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BiofeebackDrivingSimulator.Views"
+        mc:Ignorable="d"
+        Title="Puertos COM" Height="205" Width="354"
+        DataContext="{Binding Main.PuertosVm, Source={StaticResource Locator}}" 
+        WindowStartupLocation="CenterScreen" 
+        Background="#FF222431">
+    <Grid>
+        <Label 
+            Content="Puerto Arduino UNO: " 
+            HorizontalAlignment="Left" 
+            Margin="29,23,0,0" 
+            VerticalAlignment="Top"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <Label 
+            Content="Puerto Arduino NANO: " 
+            HorizontalAlignment="Left" 
+            Margin="29,62,0,0" 
+            VerticalAlignment="Top"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <ComboBox 
+            HorizontalAlignment="Left" 
+            Margin="178,23,0,0" 
+            VerticalAlignment="Top" 
+            Width="130"
+            BorderThickness="1" 
+            BorderBrush="#FF222431" 
+            Background="White" 
+            Foreground="#FF222431"/>
+        <ComboBox 
+            HorizontalAlignment="Left" 
+            Margin="178,62,0,0" 
+            VerticalAlignment="Top" 
+            Width="130"
+            BorderThickness="1" 
+            BorderBrush="#FF222431" 
+            Background="White" 
+            Foreground="#FF222431"/>
+        <Button 
+            Content="Guardar" 
+            HorizontalAlignment="Left" 
+            Margin="116,116,0,0" 
+            VerticalAlignment="Top" 
+            Width="115"
+            Command="{Binding GuardarCommand, Mode=OneWay}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+            Background="#5EBA7D" 
+            Foreground="#FF242431" 
+            FontWeight="Bold"
+            Height="35" 
+            BorderBrush="#FF262626"/>
+    </Grid>
+</Window>

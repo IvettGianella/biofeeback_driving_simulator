@@ -1,0 +1,78 @@
+﻿<Window x:Class="BiofeebackDrivingSimulator.Views.UsuariosView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BiofeebackDrivingSimulator.Views"
+        mc:Ignorable="d"
+        Title="Usuarios" Height="450" Width="800"
+        DataContext="{Binding Main.UsuariosVm, Source={StaticResource Locator}}" 
+        WindowStartupLocation="CenterScreen" 
+        Background="#FF222431">
+    <Grid>
+        <DataGrid 
+            AlternatingRowBackground="#FF383838"
+            AlternationCount="2"
+            Background="#FF262626"
+            CanUserAddRows="False"
+            Foreground="#FFB3B3B3"
+            HorizontalAlignment="Left"
+            Height="270" 
+            IsReadOnly="True"
+            IsSynchronizedWithCurrentItem="True"
+            ItemsSource="{Binding UsuariosLocal}"
+            Margin="34,28,0,0" 
+            RowBackground="#FF262626"
+            SelectedItem="{Binding Usuario}"
+            SelectionMode="Single"
+            VerticalAlignment="Top" 
+            Width="727">
+            <DataGrid.InputBindings>
+                <MouseBinding
+                    MouseAction="LeftDoubleClick"
+                    Command="{Binding DoubleClickCommand, Mode=OneWay}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+            </DataGrid.InputBindings>
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background" Value="#5EBA7D" />
+                    <Setter Property="Foreground" Value="#FF242431" />
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="1 1 1 1"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Margin" Value="-1,-1,0,0" />
+                    <Setter Property="Height" Value="28" />
+                    <Setter Property="Padding" Value="20 5 20 5" />
+                    <Setter Property="Width" Value="auto"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+        <Button 
+            Content="Agregar Nuevo Usuario" 
+            HorizontalAlignment="Left" 
+            Margin="34,328,0,0" 
+            VerticalAlignment="Top" 
+            Width="193"
+            FontFamily="Arial"
+            Command="{Binding CommandAgregarNuevo, Mode=OneWay}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+            Background="#5EBA7D" 
+            Foreground="#FF242431" 
+            FontWeight="Bold"
+            Height="38" 
+            BorderBrush="#FF262626"
+            BorderThickness="1" />
+        <Button 
+            Content="" 
+            HorizontalAlignment="Left" 
+            Margin="711,321,0,0" 
+            VerticalAlignment="Top" 
+            Width="50" Height="50"
+            >
+            <Button.Background>
+                <ImageBrush ImageSource="/BiofeebackDrivingSimulator;component/Recursos/settings.png"/>
+            </Button.Background>
+        </Button>
+    </Grid>
+</Window>

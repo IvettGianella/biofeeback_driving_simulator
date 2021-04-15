@@ -1,0 +1,199 @@
+﻿<Window x:Class="BiofeebackDrivingSimulator.Views.RegistroUsuarioView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BiofeebackDrivingSimulator.Views"
+        mc:Ignorable="d"
+        Title="RegistroUsuarioView" Height="450" Width="800"
+        DataContext="{Binding Main.RegistroUsuarioVm, Source={StaticResource Locator}}"
+        WindowStartupLocation="CenterScreen" 
+        Background="#FF222431">
+    <Canvas>
+        <Label 
+            Content="Nombres: " 
+            Canvas.Left="80" 
+            Canvas.Top="56" 
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <TextBox 
+            Name="Nombres"
+            Height="23" 
+            Canvas.Left="83" 
+            TextWrapping="Wrap" 
+            Text="{Binding Nombres}" 
+            Canvas.Top="79" 
+            Width="302"
+            BorderThickness="1" 
+            BorderBrush="#FF222431" 
+            Background="White" 
+            Foreground="#FF222431"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" 
+               Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=Nombres}" 
+               Foreground="Red" Margin="5,0,0,0"/>
+        <Label 
+            Content="Apellidos: " 
+            Canvas.Left="80" 
+            Canvas.Top="111"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <TextBox 
+            Name="Apellidos"
+            Height="23" 
+            Canvas.Left="83" 
+            TextWrapping="Wrap" 
+            Text="{Binding Apellidos}" 
+            Canvas.Top="133" 
+            Width="302"
+            BorderThickness="1" 
+            BorderBrush="#FF222431" 
+            Background="White" 
+            Foreground="#FF222431"/>
+        <Label 
+            Content="Sexo: " 
+            Canvas.Left="80" 
+            Canvas.Top="165"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <Label 
+            Content="Edad: " 
+            Canvas.Left="80" 
+            Canvas.Top="217"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <TextBox 
+            Name="Edad"
+            Height="23" 
+            Canvas.Left="83" 
+            TextWrapping="Wrap" 
+            Text="{Binding Edad}" 
+            Canvas.Top="238" 
+            Width="183"
+            BorderThickness="1" 
+            BorderBrush="#FF222431" 
+            Background="White" 
+            Foreground="#FF222431"/>
+        <ComboBox 
+            Canvas.Left="83" 
+            Canvas.Top="187" 
+            Width="183"
+            ItemsSource="{Binding Path=ListaSexo}"
+            SelectedValue="{Binding Path=ModelSexo}"
+            BorderThickness="1" 
+            BorderBrush="#FF222431" 
+            Background="White" 
+            Foreground="#FF222431"/>
+        <Button 
+            Content="{Binding BtnRegistrarEditar}"
+            Canvas.Left="526" 
+            Canvas.Top="102" 
+            Width="148"
+            Command="{Binding RegistroCommand}"
+            Background="#5EBA7D" 
+            Foreground="#FF242431" 
+            FontWeight="Bold"
+            Height="35" 
+            BorderBrush="#FF262626"/>
+        <Button 
+            Content="Regresar" 
+            Canvas.Left="526" 
+            Canvas.Top="273" 
+            Width="148"
+            Command="{Binding RegresarCommand, Mode=OneWay}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+            Background="#FF242431" 
+            Foreground="#5EBA7D" 
+            FontWeight="Bold"
+            Height="35" 
+            BorderBrush="#5EBA7D"/>
+        <Button 
+            Content="Iniciar Sesión" 
+            Canvas.Left="526" 
+            Canvas.Top="187" 
+            Width="148"
+            Command="{Binding SesionCommand, Mode=OneWay}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+            Visibility="{Binding Visible}"
+            Background="#5EBA7D" 
+            Foreground="#FF242431" 
+            FontWeight="Bold"
+            Height="35" 
+            BorderBrush="#FF262626"/>
+        <Label 
+            Content="Id:" 
+            Canvas.Left="80" 
+            Canvas.Top="30"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <Label 
+            Content="{Binding IdView}" 
+            Canvas.Left="109" 
+            Canvas.Top="30"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <Label 
+            Content="Sessiones: " 
+            Canvas.Left="80" 
+            Canvas.Top="270"
+            Visibility="{Binding Visible}"
+            Foreground="White" 
+            FontWeight="Bold"/>
+        <DataGrid 
+            AlternatingRowBackground="#FF383838"
+            AlternationCount="2"
+            AutoGenerateColumns="False"
+            Background="#FF262626"
+            CanUserAddRows="False"
+            Canvas.Left="83" 
+            Canvas.Top="292"
+            Foreground="#FFB3B3B3"
+            Height="109"
+            IsReadOnly="True"
+            ItemsSource="{Binding Sesiones}"
+            IsSynchronizedWithCurrentItem="True"
+            RowBackground="#FF262626"
+            SelectedItem="{Binding SesionLb}"
+            SelectionMode="Single"
+            Visibility="{Binding Visible}"
+            Width="240">
+            <DataGrid.Columns>
+                <DataGridTextColumn 
+                    Header="Fecha"  
+                    Binding="{Binding Fecha, StringFormat=' {0:dd/MM/yyyy - hh:mm tt}'}"/>
+                <DataGridTextColumn 
+                    Header="Comentario"  
+                    Binding="{Binding Cometario}"/>
+            </DataGrid.Columns>
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background" Value="#5EBA7D" />
+                    <Setter Property="Foreground" Value="#FF242431" />
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="1 1 1 1"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Margin" Value="-1,-1,0,0" />
+                    <Setter Property="Height" Value="28" />
+                    <Setter Property="Padding" Value="20 5 20 5" />
+                    <Setter Property="Width" Value="auto"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.InputBindings>
+                <MouseBinding
+                    MouseAction="LeftDoubleClick"
+                    Command="{Binding DoubleClickCommand}"/>
+            </DataGrid.InputBindings>
+        </DataGrid>
+        <Button 
+            Content="" 
+            Canvas.Left="732" 
+            Canvas.Top="360" 
+            Command="{Binding ComparacionCommand}"
+            Width="50" Height="50">
+            <Button.Background>
+                <ImageBrush ImageSource="/BiofeebackDrivingSimulator;component/Recursos/diagram.png"/>
+            </Button.Background>
+        </Button>
+
+    </Canvas>
+</Window>

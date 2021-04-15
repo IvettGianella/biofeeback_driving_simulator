@@ -1,0 +1,10 @@
+﻿<Application x:Class="BiofeebackDrivingSimulator.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BiofeebackDrivingSimulator"
+             xmlns:core="clr-namespace:BiofeebackDrivingSimulator.Infrastructure"
+             StartupUri="Views/UsuariosView.xaml">
+    <Application.Resources>
+        <core:InstanceLocator x:Key="Locator" />
+    </Application.Resources>
+</Application>
