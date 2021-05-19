@@ -113,6 +113,21 @@ void loop()
 }
 ```
 
+### Instalación 🔧
+
+Una vez corriendo el sistema selecione los puertos COM que usará, para ello debe dar clic en ⚙️ (Configuración) de la primera pantalla, se le presentara una pantalla donde se le mostrara los puertos COM actules de su PC, selecione uno para Arduino UNO y otro para Arduino NANO para finalizar haga clic en "Aceptar".
+A continuación, cree un usuario o persona a evaluar, despues de registrar sus datos haga clic en el boton "Registrar Sesión". Se le presentará la pantalla de registro de sesión donde se mostrarán los datos que actualmente están leyendo los sensores (En caso que haya selecionado mal los puertos COM le aparecerá un mensaje diciendo que no se puede leer los Arduinos, haga clic en "Regresar" y revise sus puertos COM), ingrese un comentario sobre la sesión actual y de clic en el botón "Iniciar Sesion" cuando considere que desea terminar la sesión de clic en el botón "Terminar", esto dara por finaliazada la sesión.
+Para revisar las sesiones de un usuario, selecionelo en la pantalla de "Usuarios", y selecione la sesión que desea ver, se le presentara un pantalla con graficos de los resultados de la sesión.
+
+```
+Da un ejemplo
+```
+
+_Y repite_
+
+```
+hasta finalizar
+```
 
 ## Construido con 🛠️
 
