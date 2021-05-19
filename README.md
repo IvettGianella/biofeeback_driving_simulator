@@ -113,7 +113,7 @@ void loop()
 }
 ```
 
-### Instalación 🔧
+### Manejo del Software
 
 Una vez corriendo el sistema selecione los puertos COM que usará, para ello debe dar clic en ⚙️ (Configuración) de la primera pantalla, se le presentara una pantalla donde se le mostrara los puertos COM actules de su PC, selecione uno para Arduino UNO y otro para Arduino NANO para finalizar haga clic en "Aceptar".
 
@@ -123,15 +123,6 @@ Ingrese un comentario sobre la sesión actual y de clic en el botón "Iniciar Se
 
 Para revisar las sesiones de un usuario, selecionelo en la pantalla de "Usuarios", y selecione la sesión que desea ver, se le presentara un pantalla con graficos de los resultados de la sesión.
 
-```
-Da un ejemplo
-```
-
-_Y repite_
-
-```
-hasta finalizar
-```
 
 ## Construido con 🛠️
 
