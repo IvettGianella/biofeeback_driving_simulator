@@ -1,14 +1,11 @@
 ﻿using BiofeebackDrivingSimulator.Datos;
-using BiofeebackDrivingSimulator.ViewModels.Base;
-using System.Collections.Generic;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Data.Entity;
-using System.Windows;
-using System.Windows.Input;
-using BiofeebackDrivingSimulator.Views;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BiofeebackDrivingSimulator.ViewModels
 {
@@ -136,9 +133,10 @@ namespace BiofeebackDrivingSimulator.ViewModels
                 var avgBeta2 = Math.Round((double)beta.Average(), 4);
                 EegBetaSc.Add(lineSeriesBeta);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                string message = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 

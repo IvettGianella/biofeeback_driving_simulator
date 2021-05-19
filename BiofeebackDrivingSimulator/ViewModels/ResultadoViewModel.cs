@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Windows;
 using System.Windows.Input;
 using BiofeebackDrivingSimulator.Views;
+using System.Diagnostics;
 
 namespace BiofeebackDrivingSimulator.ViewModels
 {
@@ -215,12 +216,13 @@ namespace BiofeebackDrivingSimulator.ViewModels
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
                 MessageBox.Show(
                     "Ocurrió un problema al leer los datos registrados o no hay datos registrados",
                     "Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -234,7 +236,8 @@ namespace BiofeebackDrivingSimulator.ViewModels
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -248,7 +251,8 @@ namespace BiofeebackDrivingSimulator.ViewModels
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 

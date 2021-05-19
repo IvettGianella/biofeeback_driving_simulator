@@ -1,11 +1,12 @@
 ﻿using BiofeebackDrivingSimulator.Datos;
 using BiofeebackDrivingSimulator.Interface;
+using BiofeebackDrivingSimulator.Services;
 using BiofeebackDrivingSimulator.ViewModels.Base;
 using BiofeebackDrivingSimulator.Views;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Windows;
@@ -40,10 +41,10 @@ namespace BiofeebackDrivingSimulator.ViewModels
         #endregion
 
         #region Propiedades
-        public string Comentarios 
+        public string Comentarios
         {
             get { return this.comentarios; }
-            set { SetProperty(ref this.comentarios, value); } 
+            set { SetProperty(ref this.comentarios, value); }
         }
         public string HeartRate
         {
@@ -147,8 +148,14 @@ namespace BiofeebackDrivingSimulator.ViewModels
             {
                 this.RegistrarTerminar = "Registrar";
 
+                this.Sesion = sesion;
+                this.NewEgg = new Eeg();
+                this.NewTemperatura = new Temperatura();
+                this.NewHeartRate = new FrecuenciaCardiaca();
+                this.FrecuenciaCardiacas = new List<FrecuenciaCardiaca>();
+
                 serialPort1 = new SerialPort();
-                serialPort1.PortName = "COM5";
+                serialPort1.PortName = Properties.Settings.Default.ComPortUno;
                 serialPort1.BaudRate = 9600;
                 serialPort1.DtrEnable = true;
                 serialPort1.Open();
@@ -156,21 +163,12 @@ namespace BiofeebackDrivingSimulator.ViewModels
                 serialPort1.DataReceived += serialPort_DataRecived;
 
                 serialPort2 = new SerialPort();
-                serialPort2.PortName = "COM16";
+                serialPort2.PortName = Properties.Settings.Default.ComPortNano;
                 serialPort2.BaudRate = 9600;
                 serialPort2.DtrEnable = true;
                 serialPort2.Open();
 
                 serialPort2.DataReceived += serialPort2_DataRecived;
-
-                this.Sesion = sesion;
-                //this.Sesion.FrecuenciaCardiacas = new List<FrecuenciaCardiaca>();
-                //this.Sesion.Temperaturas = new List<Temperatura>();
-                //this.Sesion.Eegs = new List<Eeg>();
-                this.NewEgg = new Eeg();
-                this.NewTemperatura = new Temperatura();
-                this.NewHeartRate = new FrecuenciaCardiaca();
-                this.FrecuenciaCardiacas = new List<FrecuenciaCardiaca>();
             }
             catch (Exception ex)
             {
@@ -180,6 +178,11 @@ namespace BiofeebackDrivingSimulator.ViewModels
                     "Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
+
+                RemoverSesion(this.Sesion.Id);
+
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -192,55 +195,52 @@ namespace BiofeebackDrivingSimulator.ViewModels
         /// <param name="obj"></param>
         public async void Registrar(Object obj)
         {
-            if (!this.Save)
+            try
             {
-                if (string.IsNullOrEmpty(this.Comentarios))
+                if (!this.Save)
                 {
-                    MessageBox.Show(
-                    "Debe llenar el espacio de comentarios",
-                    "Atención",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Exclamation);
-                }
-                else 
-                {
-                    this.Save = true;
-                    this.RegistrarTerminar = "Terminar";
-                }
-            }
-            else
-            {
-                //Cambiarle el texto al boton por terminar session o algo asi
-                var rpta = MessageBox.Show(
-                            "¿Desea dejar de registrar los datos de la sesión?",
-                            "Atención",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Exclamation);
-
-                if (rpta.ToString().Equals("Yes"))
-                {
-                    //Si dijo si: guardar el heart rate y ya pos sacalo de la pantalla
-
-                    this.Save = false;
-                    this.RegistrarTerminar = "Registrar";
-
-                    using (var entidades = new Entidades())
+                    if (string.IsNullOrEmpty(this.Comentarios))
                     {
-                        this.Sesion = entidades.Sesiones
-                                        .Where(s => s.Id == this.Sesion.Id)
-                                        .Include(s => s.FrecuenciaCardiacas)
-                                        .FirstOrDefault();
-
-                        this.Sesion.Comentarios = this.Comentarios;
-
-                        foreach (var item in this.FrecuenciaCardiacas)
-                        {
-                            this.Sesion.FrecuenciaCardiacas.Add(item);
-                        }
-
-                        await entidades.SaveChangesAsync();
+                        MessageBox.Show(
+                        "Debe llenar el espacio de comentarios",
+                        "Atención",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                    }
+                    else
+                    {
+                        this.Save = true;
+                        this.RegistrarTerminar = "Terminar";
                     }
                 }
+                else
+                {
+                    var rpta = MessageBox.Show(
+                                "¿Desea dejar de registrar los datos de la sesión?",
+                                "Atención",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Exclamation);
+
+                    if (rpta.ToString().Equals("Yes"))
+                    {
+                        this.Save = false;
+                        this.RegistrarTerminar = "Registrar";
+
+                        using (var context = new Entidades())
+                        {
+                            SesionServices sesionServices = new SesionServices(context);
+                            sesionServices.AgregarComentarioSesion(this.Sesion.Id, this.comentarios);
+
+                            FrecuenciaCardiacaService frecuenciaCardiacaService = new FrecuenciaCardiacaService(context);
+                            await frecuenciaCardiacaService.AgregarFrecuenciaCardiaca(this.Sesion.Id, this.FrecuenciaCardiacas);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -276,7 +276,6 @@ namespace BiofeebackDrivingSimulator.ViewModels
             try
             {
                 string read1 = serialPort1.ReadLine();
-                //Pon le una coma (,) en lugar de un igual (=)
                 if (read1.Contains("T,"))
                 {
                     //Temperatura = read1;
@@ -290,16 +289,10 @@ namespace BiofeebackDrivingSimulator.ViewModels
 
                     if (this.Save)
                     {
-                        using (var entidades = new Entidades())
+                        using (var contexto = new Entidades())
                         {
-                            this.Sesion = entidades.Sesiones
-                                            .Where(s => s.Id == this.Sesion.Id)
-                                            .Include(s => s.Temperaturas)
-                                            .FirstOrDefault();
-                            this.Sesion.Temperaturas.Add(this.NewTemperatura);
-                            //entidades.Temperaturas.Add(this.NewTemperatura);
-                            //entidades.Sesiones.Add(this.Sesion);
-                            await entidades.SaveChangesAsync();
+                            TemperaturaService temperaturaService = new TemperaturaService(contexto);
+                            await temperaturaService.AgregarTemperatura(this.Sesion.Id, this.NewTemperatura);
                         }
                     }
                 }
@@ -341,11 +334,6 @@ namespace BiofeebackDrivingSimulator.ViewModels
                         maxDelta = this.NewEgg.Delta;
                     }
 
-                    //if (minAlpha > this.NewEgg.HighAlpha || minAlpha == 0) 
-                    //{
-                    //    minAlpha = this.NewEgg.HighAlpha;
-                    //}
-
                     if (this.NewEgg.Senal == 200)
                     {
                         this.Senal = "Red";
@@ -375,23 +363,18 @@ namespace BiofeebackDrivingSimulator.ViewModels
 
                     if (this.Save)
                     {
-                        using (var entidades = new Entidades())
+                        using (var contexto = new Entidades())
                         {
-                            this.Sesion = entidades.Sesiones
-                                            .Where(s => s.Id == this.Sesion.Id)
-                                            .Include(s => s.Eegs)
-                                            .FirstOrDefault();
-                            this.Sesion.Eegs.Add(this.NewEgg);
-                            //entidades.Eegs.Add(this.NewEgg);
-                            //entidades.Sesiones.Add(this.Sesion);
-                            await entidades.SaveChangesAsync();
+                            EegService eegService = new EegService(contexto);
+                            await eegService.AgregarEeg(this.Sesion.Id, this.NewEgg);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -419,14 +402,12 @@ namespace BiofeebackDrivingSimulator.ViewModels
                     //Mensaje para pedir que coloque el dedo en el sensor
                     if (result[3].ToString().Contains("NoFinger"))
                     {
-                        //this.SourceHr = "";
                         this.AltoAncho = 25;
                         this.HeartRate = "Por favor coloque el dedo en el sensor";
                     }
                 }
                 else
                 {
-                    //this.AltoAncho = 25;
                     if (this.NewHeartRate.Valor < 60)
                     {
                         //Evitar mostrar dato error
@@ -439,7 +420,6 @@ namespace BiofeebackDrivingSimulator.ViewModels
 
                     if (!result[1].Equals(this.oldHeartRate.ToString()))
                     {
-                        //this.SourceHr = "";
                         if (this.AltoAncho == 25)
                         {
                             this.AltoAncho = 35;
@@ -452,7 +432,6 @@ namespace BiofeebackDrivingSimulator.ViewModels
 
                     if (this.Save)
                     {
-                        //this.FrecuenciaCardiacas = new List<FrecuenciaCardiaca>();
                         if (oldHr != this.NewHeartRate.Valor)
                         {
                             this.FrecuenciaCardiacas.Add(new FrecuenciaCardiaca
@@ -462,14 +441,30 @@ namespace BiofeebackDrivingSimulator.ViewModels
                             });
                             oldHr = this.NewHeartRate.Valor;
                         }
-
-                        //this.Sesion.FrecuenciaCardiacas.Add(this.NewHeartRate);
                     }
                 }
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+        }
+
+        private void RemoverSesion(int idSesion) 
+        {
+            try
+            {
+                using (var contexto = new Entidades())
+                {
+                    SesionServices sesion = new SesionServices(contexto);
+                    sesion.BorrarSesion(idSesion);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
         #endregion

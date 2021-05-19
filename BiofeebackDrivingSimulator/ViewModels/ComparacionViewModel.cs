@@ -5,6 +5,7 @@ using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -185,6 +186,8 @@ namespace BiofeebackDrivingSimulator.ViewModels
                     "Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
         #endregion

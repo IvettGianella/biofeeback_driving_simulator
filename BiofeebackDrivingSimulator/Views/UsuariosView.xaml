@@ -69,6 +69,7 @@
             Margin="711,321,0,0" 
             VerticalAlignment="Top" 
             Width="50" Height="50"
+            Command="{Binding CommandConfiguracionComPort, Mode=OneWay}"
             >
             <Button.Background>
                 <ImageBrush ImageSource="/BiofeebackDrivingSimulator;component/Recursos/settings.png"/>

@@ -120,7 +120,8 @@
             Foreground="#FF242431" 
             FontWeight="Bold"
             BorderBrush="#FF262626"
-            BorderThickness="1" />
+            BorderThickness="1"
+            Visibility="Hidden"/>
         <Button 
             Content="Estandarización" 
             HorizontalAlignment="Left" 
@@ -135,7 +136,7 @@
             Foreground="#FF242431" 
             FontWeight="Bold"
             BorderBrush="#FF262626"
-            BorderThickness="1" />
-
+            BorderThickness="1"
+            Visibility="Hidden"/>
     </Grid>
 </Window>

@@ -189,7 +189,8 @@
             Canvas.Left="732" 
             Canvas.Top="360" 
             Command="{Binding ComparacionCommand}"
-            Width="50" Height="50">
+            Width="50" Height="50"
+            Visibility="Hidden">
             <Button.Background>
                 <ImageBrush ImageSource="/BiofeebackDrivingSimulator;component/Recursos/diagram.png"/>
             </Button.Background>

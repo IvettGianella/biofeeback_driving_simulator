@@ -25,6 +25,8 @@
             Foreground="White" 
             FontWeight="Bold"/>
         <ComboBox 
+            ItemsSource="{Binding ComPorts}"
+            SelectedItem="{Binding SelectedComPortUno}"
             HorizontalAlignment="Left" 
             Margin="178,23,0,0" 
             VerticalAlignment="Top" 
@@ -34,6 +36,8 @@
             Background="White" 
             Foreground="#FF222431"/>
         <ComboBox 
+            ItemsSource="{Binding ComPorts}"
+            SelectedItem="{Binding SelectedComPortNano}"
             HorizontalAlignment="Left" 
             Margin="178,62,0,0" 
             VerticalAlignment="Top" 
@@ -43,9 +47,22 @@
             Background="White" 
             Foreground="#FF222431"/>
         <Button 
+            Content="Cancelar" 
+            HorizontalAlignment="Left" 
+            Margin="29,116,0,0" 
+            VerticalAlignment="Top" 
+            Width="115"
+            Command="{Binding CancelarCommand, Mode=OneWay}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+            Background="#FF242431" 
+            Foreground="#5EBA7D" 
+            FontWeight="Bold"
+            Height="35" 
+            BorderBrush="#5EBA7D"/>
+        <Button 
             Content="Guardar" 
             HorizontalAlignment="Left" 
-            Margin="116,116,0,0" 
+            Margin="193,116,0,0" 
             VerticalAlignment="Top" 
             Width="115"
             Command="{Binding GuardarCommand, Mode=OneWay}"

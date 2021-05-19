@@ -1,6 +1,7 @@
 ﻿using BiofeebackDrivingSimulator.Datos;
 using BiofeebackDrivingSimulator.Interface;
 using BiofeebackDrivingSimulator.Models;
+using BiofeebackDrivingSimulator.Services;
 using BiofeebackDrivingSimulator.ViewModels.Base;
 using BiofeebackDrivingSimulator.Views;
 using GalaSoft.MvvmLight.Command;
@@ -33,6 +34,7 @@ namespace BiofeebackDrivingSimulator.ViewModels
             this.usuario = new UsuarioPlano();
             Init();
             this.CommandAgregarNuevo = new RelayCommand<ICloseable>(this.AgregarNuevo);
+            this.CommandConfiguracionComPort = new RelayCommand<ICloseable>(this.ConfiguracionComPort);
             this.DoubleClickCommand = new RelayCommand<ICloseable>(this.Editar);
         }
         #endregion
@@ -41,6 +43,7 @@ namespace BiofeebackDrivingSimulator.ViewModels
         //public ICommand DoubleClickCommand => new DelegateCommand(Editar, null);
         public RelayCommand<ICloseable> CommandAgregarNuevo { get; private set; }
         public RelayCommand<ICloseable> DoubleClickCommand { get; private set; }
+        public RelayCommand<ICloseable> CommandConfiguracionComPort { get; private set; }
         #endregion
 
         #region Metodos
@@ -48,45 +51,51 @@ namespace BiofeebackDrivingSimulator.ViewModels
         /// Método de inicialización de la clase el cual trae de la base 
         /// de datos todos los usuarios registrados actualmente
         /// </summary>
-        public void Init()
+        public async void Init()
         {
             this.Usuarios = new List<Usuario>();
             this.UsuariosLocal = new List<UsuarioPlano>();
             try
             {
-                using (var entidades = new Entidades())
+                //using (var entidades = new Entidades())
+                //{
+                //    this.Usuarios = entidades.Usuarios.Include("Sesiones").ToList();
+                //}
+
+                using (var context = new Entidades())
                 {
-                    this.Usuarios = entidades.Usuarios.Include("Sesiones").ToList();
-                }
+                    UsuarioServices services = new UsuarioServices(context);
+                    this.Usuarios = await services.ObtenerUsuariosAsync();
 
-                foreach (var item in this.Usuarios)
-                {
-                    var usuarioLocal = new UsuarioPlano
+                    foreach (var item in this.Usuarios)
                     {
-                        Id = item.Id,
-                        Apellidos = item.Apellidos,
-                        Edad = item.Edad,
-                        Nombres = item.Nombres
-                    };
+                        var usuarioLocal = new UsuarioPlano
+                        {
+                            Id = item.Id,
+                            Apellidos = item.Apellidos,
+                            Edad = item.Edad,
+                            Nombres = item.Nombres
+                        };
 
-                    if (item.Sexo)
-                    {
-                        usuarioLocal.Sexo = "Femenino";
-                    }
-                    else
-                    {
-                        usuarioLocal.Sexo = "Masculino";
-                    }
+                        if (item.Sexo)
+                        {
+                            usuarioLocal.Sexo = "Femenino";
+                        }
+                        else
+                        {
+                            usuarioLocal.Sexo = "Masculino";
+                        }
 
-                    if (item.Sesiones == null)
-                    {
-                        usuarioLocal.Sesiones = 0;
+                        if (item.Sesiones == null)
+                        {
+                            usuarioLocal.Sesiones = 0;
+                        }
+                        else
+                        {
+                            usuarioLocal.Sesiones = item.Sesiones.Count;
+                        }
+                        this.UsuariosLocal.Add(usuarioLocal);
                     }
-                    else
-                    {
-                        usuarioLocal.Sesiones = item.Sesiones.Count;
-                    }
-                    this.UsuariosLocal.Add(usuarioLocal);
                 }
             }
             catch (Exception ex)
@@ -181,6 +190,27 @@ namespace BiofeebackDrivingSimulator.ViewModels
                         MessageBoxImage.Error);
             }
 
+        }
+
+        public void ConfiguracionComPort(ICloseable window) 
+        {
+            try
+            {
+                MainViewModel.GetInstance().PuertosVm.Init();
+                if (!Application.Current.Windows.OfType<PuertosView>().Any())
+                {
+                    PuertosView puertosView = new PuertosView();
+                    puertosView.Show();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(
+                        "Ocurrió un problema al cargar la configuración",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+            }
         }
         #endregion
     }

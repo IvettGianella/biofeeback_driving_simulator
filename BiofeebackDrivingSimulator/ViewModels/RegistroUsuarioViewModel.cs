@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -222,14 +223,6 @@ namespace BiofeebackDrivingSimulator.ViewModels
                                 this.Id = newUser.Id;
                                 this.IdView = this.Id.ToString();
                             }
-                            //using (var entidades = new Entidades())
-                            //{
-                            //    var newUser = entidades.Usuarios.Add(usuario);
-                            //    await entidades.SaveChangesAsync();
-
-                            //    this.Id = newUser.Id;
-                            //    this.IdView = this.Id.ToString();
-                            //}
 
                             MessageBox.Show(
                             "El usuario se registro correctamente",
@@ -243,34 +236,32 @@ namespace BiofeebackDrivingSimulator.ViewModels
                     }
                     else 
                     {
-                        using (var entidades = new Entidades())
+                        using (var context = new Entidades())
                         {
-                            this.Usuario = entidades.Usuarios.Find(this.Id);
-
-                            if (this.Usuario != null)
+                            UsuarioServices services = new UsuarioServices(context);
+                            bool sexoEdit = false;
+                            if (this.ModelSexo == "Masculino")
                             {
-                                this.Usuario.Apellidos = this.Apellidos;
-                                this.Usuario.Edad = Convert.ToInt32(this.Edad);
-                                this.Usuario.Nombres = this.Nombres;
-                                this.Usuario.EsMuestra = true;
-                                if (this.ModelSexo == "Masculino")
-                                {
-                                    this.Usuario.Sexo = false;
-                                }
-                                else
-                                {
-                                    this.Usuario.Sexo = true;
-                                }
-
-                                await entidades.SaveChangesAsync();
+                                sexoEdit = false;
                             }
+                            else
+                            {
+                                sexoEdit = true;
+                            }
+                            await services.EditarUsuario(
+                                            this.Id, 
+                                            this.Nombres, 
+                                            this.Apellidos, 
+                                            Convert.ToInt32(this.Edad),
+                                            true,
+                                            sexoEdit);
                         }
 
                         MessageBox.Show(
-                            "Datos del usuario editados correctamente",
-                            "Mensaje",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Information);
+                        "Datos del usuario editados correctamente",
+                        "Mensaje",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                     }
                 }
                 catch (Exception ex)
@@ -281,6 +272,7 @@ namespace BiofeebackDrivingSimulator.ViewModels
                         "Error",
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
+                    Logger.Log.Error("Mensaje: ", ex);
                 }
             }
         }
@@ -315,21 +307,11 @@ namespace BiofeebackDrivingSimulator.ViewModels
                     Comentarios = "",
                 };
 
-                using (var entidades = new Entidades())
+                using (var context = new Entidades())
                 {
-                    this.Usuario = entidades.Usuarios.Find(this.Id);
-
-                    if (this.Usuario != null)
-                    {
-                        this.Usuario.Sesiones = new List<Sesion>();
-                        this.Usuario.Sesiones.Add(newSesion);
-
-                        await entidades.SaveChangesAsync();
-
-                        this.Usuario = entidades.Usuarios.Find(this.Id);
-                        var sesion = this.Usuario.Sesiones.ToList().OrderBy(s => s.Fecha).FirstOrDefault();
-                        newSesion.Id = sesion.Id;
-                    }
+                    SesionServices sesionServices = new SesionServices(context);
+                    var sesion = await sesionServices.AgregarSesion(this.Id, newSesion);
+                    newSesion.Id = sesion.Id;
                 }
 
                 MainViewModel.GetInstance().RegistroSimulacionVm.Init(newSesion);
@@ -343,7 +325,8 @@ namespace BiofeebackDrivingSimulator.ViewModels
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -362,7 +345,8 @@ namespace BiofeebackDrivingSimulator.ViewModels
             }
             catch (Exception ex)
             {
-                var massage = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
@@ -387,7 +371,8 @@ namespace BiofeebackDrivingSimulator.ViewModels
             }
             catch (Exception ex)
             {
-                var massage = ex.Message;
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
         #endregion

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,63 +20,78 @@ namespace BiofeebackDrivingSimulator.Services
 
         public async Task<Sesion> AgregarSesion(int idUsuario, Sesion sesionNueva)
         {
-            Sesion sesion = new Sesion();
-            using (var entidades = _context)
+            try
             {
-                var usuario = entidades.Usuarios.Where(u => u.Id == idUsuario).FirstOrDefault();
-
-                if (usuario != null)
+                UsuarioServices usuarioServices = new UsuarioServices(_context);
+                Sesion sesion = new Sesion();
+                var usuario = usuarioServices.ObtenerUsuario(idUsuario);
+                if (usuario != null) 
                 {
                     usuario.Sesiones = new List<Sesion>();
                     usuario.Sesiones.Add(sesionNueva);
-
-                    await entidades.SaveChangesAsync();
-
-                    usuario = entidades.Usuarios.Where(u => u.Id == idUsuario).FirstOrDefault();
-                    sesion = usuario.Sesiones.ToList().OrderBy(s => s.Fecha).FirstOrDefault();
+                    await _context.SaveChangesAsync();
+                    usuario = usuarioServices.ObtenerUsuario(idUsuario);
+                    sesion = usuario.Sesiones.ToList().OrderByDescending(s => s.Fecha).FirstOrDefault();
                 }
+                return sesion;
             }
-            return sesion;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+            return null;
         }
 
-        public async void AgregarComentarioSesion(int id, string comentarios)
+        public async void AgregarComentarioSesion(int idSesiones, string comentarios)
         {
-            using (var entidades = _context)
+            try
             {
-                var sesion = entidades.Sesiones
-                                .Where(s => s.Id == id)
-                                .FirstOrDefault();
-
+                var sesion = _context.Sesiones
+                                    .Where(s => s.Id == idSesiones)
+                                    .FirstOrDefault();
                 sesion.Comentarios = comentarios;
-                await entidades.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
             }
         }
 
         public Usuario ObtnerSesionesUsuario(int idUsuario)
         {
-            Usuario usuario = new Usuario();
-            using (var entidades = _context)
+            try
             {
-                usuario = entidades.Usuarios
-                                .Where(u => u.Id == idUsuario)
-                                .FirstOrDefault();
+                var usuarioSesiones = _context.Usuarios.Find(idUsuario);
+                return usuarioSesiones;
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+            return null;
         }
 
-        public Sesion ObtenerSesionCompleta(int id)
+        public async void BorrarSesion(int idSesion)
         {
-            Sesion sesion = new Sesion();
-            using (var entidades = new Entidades())
+            try
             {
-                sesion = entidades.Sesiones
-                                       .Where(s => s.Id == id)
-                                       .Include(s => s.FrecuenciaCardiacas)
-                                       .Include(s => s.Eegs)
-                                       .Include(s => s.Temperaturas)
-                                       .FirstOrDefault();
+                using (var entidades = new Entidades())
+                {
+                    var sesion = _context.Sesiones.Find(idSesion);
+                    _context.Sesiones.Remove(sesion);
+                    await _context.SaveChangesAsync();
+                }
             }
-            return sesion;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+            
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BiofeebackDrivingSimulator.Datos;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +28,7 @@ namespace BiofeebackDrivingSimulator.Services
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 Logger.Log.Error("Mensaje: ", ex);
             }
             return null;
@@ -33,37 +36,74 @@ namespace BiofeebackDrivingSimulator.Services
 
         public async Task<Usuario> EditarUsuario(int id, string nombres, string apellidos, int edad, bool esMuestra, bool sexo)
         {
-            var usuario = ObtenerUsuario(id);
-            using (var entidades = _context)
+            try
             {
+                var usuario = ObtenerUsuario(id);
+
+                if (usuario == null) return null;
+
                 usuario.Nombres = nombres;
                 usuario.Apellidos = apellidos;
                 usuario.Edad = edad;
                 usuario.EsMuestra = esMuestra;
                 usuario.Sexo = sexo;
                 await _context.SaveChangesAsync();
+                return usuario;
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+
+            return null;
         }
 
         public Usuario ObtenerUsuario(int id)
         {
-            var usuario = new Usuario();
-            using (var entidades = _context)
+            try
             {
-                usuario = entidades.Usuarios.Where(u => u.Id == id).FirstOrDefault();
+                var usuario = _context.Usuarios.Find(id);
+                return usuario;
             }
-            return usuario;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+
+            return null;
         }
 
         public List<Usuario> ObtenerUsuarios()
         {
-            var usuarios = new List<Usuario>();
-            using (var entidades = _context)
+            try
             {
-                usuarios = entidades.Usuarios.ToList();
+                return _context.Usuarios.ToList();
             }
-            return usuarios;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+
+            return null;
+        }
+
+        public async Task<List<Usuario>> ObtenerUsuariosAsync()
+        {
+            try
+            {
+                var usuarios = await _context.Usuarios.ToListAsync();
+                return usuarios;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log.Error("Mensaje: ", ex);
+            }
+
+            return null;
         }
     }
 }
