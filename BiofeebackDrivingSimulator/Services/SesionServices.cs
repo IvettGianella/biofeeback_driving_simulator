@@ -30,8 +30,7 @@ namespace BiofeebackDrivingSimulator.Services
                     usuario.Sesiones = new List<Sesion>();
                     usuario.Sesiones.Add(sesionNueva);
                     await _context.SaveChangesAsync();
-                    usuario = usuarioServices.ObtenerUsuario(idUsuario);
-                    sesion = usuario.Sesiones.ToList().OrderByDescending(s => s.Fecha).FirstOrDefault();
+                    sesion.Id = sesionNueva.Id;
                 }
                 return sesion;
             }
