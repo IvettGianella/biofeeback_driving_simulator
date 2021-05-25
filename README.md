@@ -133,7 +133,7 @@ Este proyecto lo construimos con:
 
 ## Autores ✒️
 
-Las siguientes personas son aquellas que contribuyeron a estre proyecto:
+Las siguientes personas son aquellas que contribuyeron a este proyecto:
 
 * **Ivett Sangiacomo Pinto** - *Tesista* 
 * **Juan Carlos Zuñiga Torres** - *Ascesor* 
