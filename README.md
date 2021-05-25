@@ -5,7 +5,7 @@ Este sistema fue desarrollado para analizar el nivel de estrés de una persona m
 
 Antes de correr el sistema asegurarse de tener conectados los Arduinos con los sensores a su PC.
 
-Codigo para sensor DS18B20
+Código para sensor DS18B20
 ```
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -31,7 +31,7 @@ void loop() {
 }
 ```
 
-Codigo para Mindflex
+Código para Mindflex
 ```
 #include <Brain.h>
 
@@ -47,7 +47,7 @@ void loop() {
 }
 ```
 
-Codigo para MAX30102
+Código para MAX30102
 ```
 #include <Wire.h>
 #include "MAX30105.h"
