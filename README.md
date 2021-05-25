@@ -1,6 +1,5 @@
 # Sistema Biofeedback para la Evalución del Nivel de Estrés
-Este sistema fue desarrollado para analizar el nivel de estrés de una persona mediante sus caracteristcas fisiologicas como la temperatura corporal o de la piel, la frecuencia cardiaca y la hondas alpha y beta producidas por el cerebro.
-Para este sistema utilizamos un sensor de temperatura (DS18B20), un sensor de electroencefalogra (Mindflex) ambos conectados a un Arduino Uno y un sensor de frecuencia cardiaca (MAX30102) conectado a un Arduino Nano.
+Este sistema fue desarrollado para analizar el nivel de estrés de una persona mediante sus características fisiológicas como la temperatura corporal o de la piel, la frecuencia cardiaca y la hondas Alpha y Beta producidas por el cerebro. Para este sistema utilizamos un sensor de temperatura (DS18B20), un sensor de electroencefalograma (Mindflex) ambos conectados a un Arduino Uno y un sensor de frecuencia cardiaca (MAX30102) conectado a un Arduino Nano.
 
 ### Pre-requisitos 📋
 
