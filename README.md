@@ -115,14 +115,13 @@ void loop()
 
 ### Manejo del Software
 
-Una vez corriendo el sistema selecione los puertos COM que usará, para ello debe dar clic en ⚙️ (Configuración) de la primera pantalla, se le presentara una pantalla donde se le mostrara los puertos COM actules de su PC, selecione uno para Arduino UNO y otro para Arduino NANO para finalizar haga clic en "Aceptar".
+Una vez corriendo el sistema seleccione los puertos COM que usará, para ello debe hacer clic en ⚙️ (Configuración) de la primera pantalla, se le presentara una pantalla donde se le mostrará los puertos COM actuales de su PC, seleccione uno para Arduino UNO y otro para Arduino NANO para finalizar haga clic en "Aceptar".
 
-A continuación, cree un usuario o persona a evaluar, despues de registrar sus datos haga clic en el botón "Registrar Sesión". Se le presentará la pantalla de registro de sesión donde se mostrarán los datos que actualmente están leyendo los sensores (En caso que haya selecionado mal los puertos COM le aparecerá un mensaje diciendo que no se puede leer los Arduinos, haga clic en "Regresar" y revise sus puertos COM). 
+A continuación, cree un usuario o persona a evaluar, después de registrar los datos haga clic en el botón "Iniciar Sesión". Se le presentará la pantalla de registro de sesión donde se mostrarán en pantalla los datos que actualmente están leyendo los sensores (En caso que haya seleccionado mal los puertos COM le aparecerá un mensaje diciendo que no se puede leer los datos del Arduino, haga clic en "Regresar" y revise sus puertos COM).
 
-Ingrese un comentario sobre la sesión actual y de clic en el botón "Iniciar Sesion" cuando considere que desea terminar la sesión de clic en el botón "Terminar", esto dara por finaliazada la sesión.
+Ingrese un comentario sobre la sesión actual y de clic en el botón "Registrar" cuando dese comenzar a registrar los datos del Arduino UNO y NANO, cuando considere que desea terminar la sesión de clic en el botón "Terminar", se le pedirá su confirmación, esto dará por finalizada la sesión.
 
-Para revisar las sesiones de un usuario, selecionelo en la pantalla de "Usuarios", y selecione la sesión que desea ver, se le presentara un pantalla con graficos de los resultados de la sesión.
-
+Para revisar las sesiones de un usuario, selecciónelo en la pantalla de "Usuarios", y seleccione la sesión que desea ver, se le presentara una pantalla con gráficos de los resultados de la sesión.
 
 ## Construido con 🛠️
 
@@ -130,6 +129,7 @@ Este proyecto lo construimos con:
 
 * [Micrisoft Visual Studio](https://visualstudio.microsoft.com/es/) - Entorno de desarrollo usado
 * [.Net](https://visualstudio.microsoft.com/es/vs/features/net-development/) - Desarrollado con WPF
+* [Arduino Studio](https://www.arduino.cc/en/software) - Entorno de desarrollo para sensores
 
 ## Autores ✒️
 
