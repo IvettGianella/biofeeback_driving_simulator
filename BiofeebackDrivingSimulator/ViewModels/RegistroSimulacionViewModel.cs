@@ -7,6 +7,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 using System.Windows;
@@ -282,10 +283,10 @@ namespace BiofeebackDrivingSimulator.ViewModels
                     String source = read1;
                     String[] result = source.Split(new char[] { ',', ';' });
 
-                    this.Temperatura = result[1].Replace("\r\n", "").Replace("\n", "").Replace("\r", "") + "°";
+                    this.Temperatura = result[1].Replace("\r\n", "") + "°";
                     this.NewTemperatura.FechaHora = System.DateTime.Now;
-                    var tem = result[1].Trim().Replace(".", ",");
-                    this.NewTemperatura.Valor = float.Parse(tem);
+                    var tem = result[1].Trim();
+                    this.NewTemperatura.Valor = float.Parse(tem, CultureInfo.InvariantCulture);
 
                     if (this.Save)
                     {
