@@ -22,7 +22,8 @@
             Canvas.Left="142" 
             Canvas.Top="48"
             Foreground="White" 
-            FontWeight="Bold"/>
+            FontWeight="Bold"
+            Width="50"/>
         <Label 
             Content="Eeg: " 
             Canvas.Left="51" 
@@ -129,7 +130,7 @@
             Canvas.Left="101" 
             Canvas.Top="86" 
             Width="{Binding AltoAncho}"
-            Source="F:\Universidad\Tesis\Trabajos con Simuladores\ProyectosVisual\BiofeebackDrivingSimulator\BiofeebackDrivingSimulator\Recursos\heart.png">
+            Source="/BiofeebackDrivingSimulator;component\Recursos\heart.png">
         </Image>
         <Label 
             Content="Meditación" 
